@@ -1,9 +1,17 @@
 package merkleTree
 
 import (
+	"bytes"
 	"encoding/binary"
+	"errors"
 	"github.com/ethereum/go-ethereum/crypto"
 )
+
+type MerkleProof struct {
+	Tree     [][]MerkleNode
+	RootHash []byte
+	Segment  Segment
+}
 
 type MerkleTree struct {
 	Levels    [][]MerkleNode
@@ -105,6 +113,28 @@ func NewMerkleTree(segment []Segment, hashFunc func(data ...[]byte) []byte) *Mer
 	tree := MerkleTree{levels, &nodes[0]}
 
 	return &tree
+}
+
+func (tree *MerkleTree) GetProof(segment Segment) (*MerkleProof, error){
+	segmentHash := crypto.Keccak256(append(UintToBytesArray(segment.SegmentLength), segment.Data...))
+	exist := false
+	leafs := tree.Levels[0]
+	for _, l := range leafs {
+		if bytes.Equal(l.Segment.Data, segmentHash) && l.Segment.SegmentLength == segment.SegmentLength {
+			exist = true
+			break
+		}
+	}
+
+	if exist == true {
+		return &MerkleProof{
+			 tree.Levels,
+			 tree.RootNode.Segment.Data,
+			 segment,
+		}, nil
+	} else {
+		return nil, errors.New("Segment does not belong to the Merkle Tree")
+	}
 }
 
 func UintToBytesArray(value uint32) []byte {
