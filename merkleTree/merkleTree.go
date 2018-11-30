@@ -1,6 +1,7 @@
 package merkleTree
 
 import (
+	"encoding/binary"
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
@@ -16,21 +17,26 @@ type MerkleNode struct {
 }
 
 type Segment struct {
-	SegmentLength int
+	SegmentLength uint32
 	Data          []byte
 }
 
 var zeroHash = crypto.Keccak256([]byte{})
+var zeroSegment = uint32(0)
 
 func NewMerkleNode(left, right *MerkleNode, hashFunc func(data ...[]byte) []byte) *MerkleNode  {
 	var node MerkleNode
 
 	if right == nil {
-		prevHashes := append(left.Segment.Data, zeroHash...)
+		concatLeftNodeData := append(UintToBytesArray(left.Segment.SegmentLength), left.Segment.Data...)
+		concatRightNodeData := append(UintToBytesArray(zeroSegment), zeroHash...)
+		prevHashes := append(concatLeftNodeData, concatRightNodeData...)
 		node.Segment.Data = hashFunc(prevHashes)
 		node.Segment.SegmentLength = left.Segment.SegmentLength
 	} else {
-		prevHashes := append(left.Segment.Data, right.Segment.Data...)
+		concatLeftNodeData := append(UintToBytesArray(left.Segment.SegmentLength), left.Segment.Data...)
+		concatRightNodeData := append(UintToBytesArray(right.Segment.SegmentLength), right.Segment.Data...)
+		prevHashes := append(concatLeftNodeData, concatRightNodeData...)
 		node.Segment.Data = hashFunc(prevHashes)
 		node.Segment.SegmentLength = left.Segment.SegmentLength + right.Segment.SegmentLength
 	}
@@ -45,7 +51,7 @@ func LeafToNode(segment Segment, hashFunc func(data ...[]byte) []byte) *MerkleNo
 	node := MerkleNode{
 		Segment: Segment{
 			segment.SegmentLength,
-			hashFunc(segment.Data),
+			hashFunc(append(UintToBytesArray(segment.SegmentLength), segment.Data...)),
 		},
 	}
 	return &node
@@ -99,4 +105,10 @@ func NewMerkleTree(segment []Segment, hashFunc func(data ...[]byte) []byte) *Mer
 	tree := MerkleTree{levels, &nodes[0]}
 
 	return &tree
+}
+
+func UintToBytesArray(value uint32) []byte {
+	b := make([]byte, 8)
+	binary.LittleEndian.PutUint32(b, value)
+	return b
 }
