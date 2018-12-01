@@ -10,6 +10,7 @@ import (
 type MerkleProof struct {
 	Tree     [][]MerkleNode
 	RootHash []byte
+	RootLength uint32
 	Segment  Segment
 }
 
@@ -130,10 +131,51 @@ func (tree *MerkleTree) GetProof(segment Segment) (*MerkleProof, error){
 		return &MerkleProof{
 			 tree.Levels,
 			 tree.RootNode.Segment.Data,
+			 tree.RootNode.Segment.SegmentLength,
 			 segment,
 		}, nil
 	} else {
 		return nil, errors.New("Segment does not belong to the Merkle Tree")
+	}
+}
+
+func Verify(proof *MerkleProof, rootHash []byte) bool {
+	tree := proof.Tree
+	merkleRoot := proof.RootHash
+	leafs := tree[0]
+	var nodes []Segment
+	for _, l := range leafs {
+		nodes = append(nodes, Segment{l.Segment.SegmentLength, l.Segment.Data})
+	}
+
+	for len(nodes) > 1 {
+		var level []Segment
+
+		if len(nodes)%2 != 0 {
+			nodes = append(nodes, Segment{zeroSegment, zeroHash})
+		}
+
+		for i := 0; i < len(nodes); i+=2 {
+			dataLeft := nodes[i].Data
+			dataRight := nodes[i+1].Data
+			segmentLengthLeft := nodes[i].SegmentLength
+			segmentLengthRight := nodes[i+1].SegmentLength
+			currentSegmentLength := segmentLengthLeft + segmentLengthRight
+
+			leftSegment := append(UintToBytesArray(segmentLengthLeft), dataLeft...)
+			rightSegment := append(UintToBytesArray(segmentLengthRight), dataRight...)
+
+			node := crypto.Keccak256(append(leftSegment, rightSegment...))
+			level = append(level, Segment{currentSegmentLength, node})
+		}
+
+		nodes = level
+	}
+
+	if bytes.Equal(nodes[0].Data, merkleRoot) && bytes.Equal(rootHash, merkleRoot) && nodes[0].SegmentLength == proof.RootLength {
+		return true
+	} else {
+		return false
 	}
 }
 

@@ -21,6 +21,7 @@ func main()  {
 	fmt.Print(test_6_leafs())
 	fmt.Print(test_8_leafs())
 	fmt.Print(test_get_proof())
+	fmt.Print(test_verify_proof())
 }
 
 func test_leaf_to_node1() string {
@@ -438,6 +439,7 @@ func test_get_proof() string {
 	trueProof := merkleTree.MerkleProof{
 		tree.Levels,
 		tree.RootNode.Segment.Data,
+		tree.RootNode.Segment.SegmentLength,
 		merkleTree.Segment{segmentLength4, d4},
 	}
 
@@ -447,5 +449,43 @@ func test_get_proof() string {
 		return "test_get_proof: true\n"
 	} else {
 		return "test_get_proof: false\n"
+	}
+}
+
+func test_verify_proof() string {
+	d1 := []byte("Привет")
+	d2 := []byte("Это")
+	d3 := []byte("Тест")
+	d4 := []byte("По")
+	d5 := []byte("Получению")
+	d6 := append([]byte("Доказательства"), []byte("Пруфа")...)
+
+	segmentLength1 := uint32(1)
+	segmentLength2 := uint32(1)
+	segmentLength3 := uint32(1)
+	segmentLength4 := uint32(1)
+	segmentLength5 := uint32(1)
+	segmentLength6 := uint32(2)
+
+	tree := merkleTree.NewMerkleTree(
+		[]merkleTree.Segment{
+			merkleTree.Segment{segmentLength1, d1},
+			merkleTree.Segment{segmentLength2, d2},
+			merkleTree.Segment{segmentLength3, d3},
+			merkleTree.Segment{segmentLength4, d4},
+			merkleTree.Segment{segmentLength5, d5},
+			merkleTree.Segment{segmentLength6, d6},
+		},
+		crypto.Keccak256,
+	)
+
+	proof, _ := tree.GetProof(merkleTree.Segment{segmentLength4, d4})
+
+	verifyProof := merkleTree.Verify(proof, tree.RootNode.Segment.Data)
+
+	if verifyProof == true {
+		return "test_verify_proof: true\n"
+	} else {
+		return "test_verify_proof: false\n"
 	}
 }
