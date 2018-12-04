@@ -2,16 +2,15 @@ package merkleTree
 
 import (
 	"encoding/binary"
-
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
-type MerkleProof struct {
-	Tree       [][]MerkleNode
-	RootHash   []byte
-	RootLength uint32
-	Segment    Segment
-}
+//type MerkleProof struct {
+//	Tree       [][]MerkleNode
+//	RootHash   []byte
+//	RootLength uint32
+//	Segment    Segment
+//}
 
 type MerkleTree struct {
 	Levels   [][]MerkleNode
@@ -68,7 +67,7 @@ func NewMerkleNode(left, right *MerkleNode, hashFunc func(data ...[]byte) []byte
 		right.Segment.SegmentLength,
 		left.Segment.Hash,
 		right.Segment.Hash,
-		crypto.Keccak256,
+		hashFunc,
 	)
 	node.Segment = nodeSegment
 
@@ -100,10 +99,10 @@ func NewMerkleTree(segment []InputSegment, hashFunc func(data ...[]byte) []byte)
 
 		lastNodeIndex := len(nodes) - 1
 		for j := 0; j <= lastNodeIndex; j += 2 {
-			if j == lastNodeIndex && j%2 != 0 {
-				notBalancedNodes = append(notBalancedNodes, nodes[j])
+			if j == lastNodeIndex && j%2 == 0 {
+				notBalancedNodes = append([]MerkleNode{nodes[j]}, notBalancedNodes...)
 			} else {
-				node := NewMerkleNode(&nodes[j], &nodes[j+1], crypto.Keccak256)
+				node := NewMerkleNode(&nodes[j], &nodes[j+1], hashFunc)
 				level = append(level, *node)
 			}
 		}
@@ -113,6 +112,7 @@ func NewMerkleTree(segment []InputSegment, hashFunc func(data ...[]byte) []byte)
 
 		if len(nodes) == 1 && len(notBalancedNodes) != 0 {
 			nodes = append(nodes, notBalancedNodes...)
+			notBalancedNodes = []MerkleNode{}
 		}
 	}
 
@@ -188,35 +188,4 @@ func UintToBytesArray(value uint32) []byte {
 	b := make([]byte, 8)
 	binary.LittleEndian.PutUint32(b, value)
 	return b
-}
-
-func MergeSort(slice []uint32) []uint32 {
-	if len(slice) < 2 {
-		return slice
-	}
-	mid := (len(slice)) / 2
-	return Merge(MergeSort(slice[:mid]), MergeSort(slice[mid:]))
-}
-
-func Merge(left, right []uint32) []uint32 {
-
-	size, i, j := len(left)+len(right), 0, 0
-	slice := make([]uint32, size, size)
-
-	for k := 0; k < size; k++ {
-		if i > len(left)-1 && j <= len(right)-1 {
-			slice[k] = right[j]
-			j++
-		} else if j > len(right)-1 && i <= len(left)-1 {
-			slice[k] = left[i]
-			i++
-		} else if left[i] < right[j] {
-			slice[k] = left[i]
-			i++
-		} else {
-			slice[k] = right[j]
-			j++
-		}
-	}
-	return slice
 }
