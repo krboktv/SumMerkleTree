@@ -599,7 +599,7 @@ func TestSortSegments() string {
 		seven,
 		merkleTree.InputSegment{Start: 94, End: 12223, Data: []byte{}},
 		eigth,
-		merkleTree.InputSegment{Start: 28912, End: 16777216, Data: []byte{}},
+		merkleTree.InputSegment{Start: 28912, End: 16777215, Data: []byte{}},
 	}
 
 	sorted := merkleTree.Sort(testArr)
