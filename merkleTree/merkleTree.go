@@ -167,14 +167,14 @@ func Sort(IS []InputSegment) []InputSegment {
 
 		// Check for start
 		if i == 0 && IS[i].Start != 0 {
-			startSturct := InputSegment{Start: 0, End: IS[i].Start - 1, Data: []byte("")}
+			startSturct := InputSegment{Start: 0, End: IS[i].Start, Data: []byte("")}
 			sortedIS = append(sortedIS, startSturct)
 		}
 
 		// Check for end
 		if i == len(IS)-1 {
 			if IS[i].End != 16777215 {
-				endS := InputSegment{Start: IS[i].End + 1, End: 16777215, Data: []byte("")}
+				endS := InputSegment{Start: IS[i].End, End: 16777215, Data: []byte("")}
 				sortedIS = append(sortedIS, IS[i])
 				sortedIS = append(sortedIS, endS)
 			} else {
@@ -187,7 +187,7 @@ func Sort(IS []InputSegment) []InputSegment {
 		second := IS[i+1]
 
 		if second.Start-first.End > 1 {
-			empty := InputSegment{Start: first.End + 1, End: second.Start - 1, Data: []byte("")}
+			empty := InputSegment{Start: first.End, End: second.Start, Data: []byte("")}
 			sortedIS = append(sortedIS, first)
 			sortedIS = append(sortedIS, empty)
 		} else {

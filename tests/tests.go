@@ -54,19 +54,19 @@ func test_leaf_to_node2() string {
 	segmentStart1 := uint32(0)
 	segmentEnd1 := uint32(2)
 	segmentLength1 := uint32(segmentEnd1 - segmentStart1)
-	segmentStart2 := uint32(3)
+	segmentStart2 := uint32(2)
 	segmentEnd2 := uint32(6)
 	segmentLength2 := uint32(segmentEnd2 - segmentStart2)
-	segmentStart3 := uint32(7)
+	segmentStart3 := uint32(6)
 	segmentEnd3 := uint32(10)
 	segmentLength3 := uint32(segmentEnd3 - segmentStart3)
-	segmentStart4 := uint32(11)
+	segmentStart4 := uint32(10)
 	segmentEnd4 := uint32(13)
 	segmentLength4 := uint32(segmentEnd4 - segmentStart4)
-	segmentStart5 := uint32(14)
+	segmentStart5 := uint32(13)
 	segmentEnd5 := uint32(15)
 	segmentLength5 := uint32(segmentEnd5 - segmentStart5)
-	segmentStart6 := uint32(16)
+	segmentStart6 := uint32(15)
 	segmentEnd6 := uint32(20)
 	segmentLength6 := uint32(segmentEnd6 - segmentStart6)
 
@@ -140,10 +140,10 @@ func test_3_leafs() string {
 	segmentStart1 := uint32(0)
 	segmentEnd1 := uint32(2)
 	segmentLength1 := uint32(segmentEnd1 - segmentStart1)
-	segmentStart2 := uint32(3)
+	segmentStart2 := uint32(2)
 	segmentEnd2 := uint32(6)
 	segmentLength2 := uint32(segmentEnd2 - segmentStart2)
-	segmentStart3 := uint32(7)
+	segmentStart3 := uint32(6)
 	segmentEnd3 := uint32(10)
 	segmentLength3 := uint32(segmentEnd3 - segmentStart3)
 
@@ -181,13 +181,13 @@ func test_4_leafs() string {
 	segmentStart1 := uint32(0)
 	segmentEnd1 := uint32(2)
 	segmentLength1 := uint32(segmentEnd1 - segmentStart1)
-	segmentStart2 := uint32(3)
+	segmentStart2 := uint32(2)
 	segmentEnd2 := uint32(6)
 	segmentLength2 := uint32(segmentEnd2 - segmentStart2)
-	segmentStart3 := uint32(7)
+	segmentStart3 := uint32(6)
 	segmentEnd3 := uint32(10)
 	segmentLength3 := uint32(segmentEnd3 - segmentStart3)
-	segmentStart4 := uint32(11)
+	segmentStart4 := uint32(10)
 	segmentEnd4 := uint32(13)
 	segmentLength4 := uint32(segmentEnd4 - segmentStart4)
 
@@ -231,17 +231,17 @@ func test_5_leafs() string {
 	segmentStart1 := uint32(0)
 	segmentEnd1 := uint32(2)
 	segmentLength1 := uint32(segmentEnd1 - segmentStart1)
-	segmentStart2 := uint32(3)
+	segmentStart2 := uint32(2)
 	segmentEnd2 := uint32(6)
 	segmentLength2 := uint32(segmentEnd2 - segmentStart2)
-	segmentStart3 := uint32(7)
+	segmentStart3 := uint32(6)
 	segmentEnd3 := uint32(10)
 	segmentLength3 := uint32(segmentEnd3 - segmentStart3)
-	segmentStart4 := uint32(11)
+	segmentStart4 := uint32(10)
 	segmentEnd4 := uint32(13)
 	segmentLength4 := uint32(segmentEnd4 - segmentStart4)
-	segmentStart5 := uint32(11)
-	segmentEnd5 := uint32(13)
+	segmentStart5 := uint32(13)
+	segmentEnd5 := uint32(16)
 	segmentLength5 := uint32(segmentEnd5 - segmentStart5)
 
 	segmentLength12 := segmentLength1 + segmentLength2
@@ -290,17 +290,17 @@ func test_6_leafs() string {
 	segmentStart1 := uint32(0)
 	segmentEnd1 := uint32(2)
 	segmentLength1 := uint32(segmentEnd1 - segmentStart1)
-	segmentStart2 := uint32(3)
+	segmentStart2 := uint32(2)
 	segmentEnd2 := uint32(6)
 	segmentLength2 := uint32(segmentEnd2 - segmentStart2)
-	segmentStart3 := uint32(7)
+	segmentStart3 := uint32(6)
 	segmentEnd3 := uint32(10)
 	segmentLength3 := uint32(segmentEnd3 - segmentStart3)
-	segmentStart4 := uint32(11)
+	segmentStart4 := uint32(10)
 	segmentEnd4 := uint32(13)
 	segmentLength4 := uint32(segmentEnd4 - segmentStart4)
-	segmentStart5 := uint32(11)
-	segmentEnd5 := uint32(13)
+	segmentStart5 := uint32(13)
+	segmentEnd5 := uint32(14)
 	segmentLength5 := uint32(segmentEnd5 - segmentStart5)
 	segmentStart6 := uint32(14)
 	segmentEnd6 := uint32(24)
@@ -358,22 +358,22 @@ func test_7_leafs() string {
 	segmentStart1 := uint32(0)
 	segmentEnd1 := uint32(2)
 	segmentLength1 := uint32(segmentEnd1 - segmentStart1)
-	segmentStart2 := uint32(3)
-	segmentEnd2 := uint32(6)
+	segmentStart2 := uint32(2)
+	segmentEnd2 := uint32(7)
 	segmentLength2 := uint32(segmentEnd2 - segmentStart2)
 	segmentStart3 := uint32(7)
 	segmentEnd3 := uint32(10)
 	segmentLength3 := uint32(segmentEnd3 - segmentStart3)
-	segmentStart4 := uint32(11)
+	segmentStart4 := uint32(10)
 	segmentEnd4 := uint32(13)
 	segmentLength4 := uint32(segmentEnd4 - segmentStart4)
-	segmentStart5 := uint32(11)
-	segmentEnd5 := uint32(13)
+	segmentStart5 := uint32(13)
+	segmentEnd5 := uint32(14)
 	segmentLength5 := uint32(segmentEnd5 - segmentStart5)
 	segmentStart6 := uint32(14)
 	segmentEnd6 := uint32(20)
 	segmentLength6 := uint32(segmentEnd6 - segmentStart6)
-	segmentStart7 := uint32(21)
+	segmentStart7 := uint32(20)
 	segmentEnd7 := uint32(24)
 	segmentLength7 := uint32(segmentEnd7 - segmentStart7)
 
@@ -440,46 +440,46 @@ func test_15_leafs() string {
 	segmentStart1 := uint32(0)
 	segmentEnd1 := uint32(2)
 	segmentLength1 := uint32(segmentEnd1 - segmentStart1)
-	segmentStart2 := uint32(3)
+	segmentStart2 := uint32(2)
 	segmentEnd2 := uint32(6)
 	segmentLength2 := uint32(segmentEnd2 - segmentStart2)
-	segmentStart3 := uint32(7)
-	segmentEnd3 := uint32(10)
+	segmentStart3 := uint32(6)
+	segmentEnd3 := uint32(11)
 	segmentLength3 := uint32(segmentEnd3 - segmentStart3)
 	segmentStart4 := uint32(11)
 	segmentEnd4 := uint32(13)
 	segmentLength4 := uint32(segmentEnd4 - segmentStart4)
-	segmentStart5 := uint32(14)
+	segmentStart5 := uint32(13)
 	segmentEnd5 := uint32(15)
 	segmentLength5 := uint32(segmentEnd5 - segmentStart5)
-	segmentStart6 := uint32(16)
+	segmentStart6 := uint32(15)
 	segmentEnd6 := uint32(20)
 	segmentLength6 := uint32(segmentEnd6 - segmentStart6)
-	segmentStart7 := uint32(21)
+	segmentStart7 := uint32(20)
 	segmentEnd7 := uint32(25)
 	segmentLength7 := uint32(segmentEnd7 - segmentStart7)
-	segmentStart8 := uint32(26)
+	segmentStart8 := uint32(25)
 	segmentEnd8 := uint32(27)
 	segmentLength8 := uint32(segmentEnd8 - segmentStart8)
-	segmentStart9 := uint32(28)
+	segmentStart9 := uint32(27)
 	segmentEnd9 := uint32(29)
 	segmentLength9 := uint32(segmentEnd9 - segmentStart9)
-	segmentStart10 := uint32(30)
+	segmentStart10 := uint32(29)
 	segmentEnd10 := uint32(31)
 	segmentLength10 := uint32(segmentEnd10 - segmentStart10)
-	segmentStart11 := uint32(32)
+	segmentStart11 := uint32(31)
 	segmentEnd11 := uint32(34)
 	segmentLength11 := uint32(segmentEnd11 - segmentStart11)
-	segmentStart12 := uint32(35)
+	segmentStart12 := uint32(34)
 	segmentEnd12 := uint32(40)
 	segmentLength12 := uint32(segmentEnd12 - segmentStart12)
-	segmentStart13 := uint32(41)
+	segmentStart13 := uint32(40)
 	segmentEnd13 := uint32(42)
 	segmentLength13 := uint32(segmentEnd13 - segmentStart13)
-	segmentStart14 := uint32(43)
+	segmentStart14 := uint32(42)
 	segmentEnd14 := uint32(45)
 	segmentLength14 := uint32(segmentEnd14 - segmentStart14)
-	segmentStart15 := uint32(46)
+	segmentStart15 := uint32(45)
 	segmentEnd15 := uint32(100)
 	segmentLength15 := uint32(segmentEnd15 - segmentStart15)
 
@@ -567,11 +567,11 @@ func TestSortSegments() string {
 	var testArr []merkleTree.InputSegment
 
 	one := merkleTree.InputSegment{Start: 3, End: 4, Data: []byte("1")}
-	two := merkleTree.InputSegment{Start: 7, End: 8, Data: []byte("2")}
+	two := merkleTree.InputSegment{Start: 7, End: 9, Data: []byte("2")}
 	three := merkleTree.InputSegment{Start: 9, End: 10, Data: []byte("3")}
 	four := merkleTree.InputSegment{Start: 13, End: 14, Data: []byte("4")}
 	five := merkleTree.InputSegment{Start: 29, End: 50, Data: []byte("5")}
-	six := merkleTree.InputSegment{Start: 90, End: 91, Data: []byte("6")}
+	six := merkleTree.InputSegment{Start: 90, End: 92, Data: []byte("6")}
 	seven := merkleTree.InputSegment{Start: 92, End: 93, Data: []byte("7")}
 	eigth := merkleTree.InputSegment{Start: 12224, End: 28911, Data: []byte("8")}
 
@@ -585,21 +585,21 @@ func TestSortSegments() string {
 	testArr = append(testArr, eigth)
 
 	shouldSorted := []merkleTree.InputSegment{
-		merkleTree.InputSegment{Start: 0, End: 2, Data: []byte{}},
+		merkleTree.InputSegment{Start: 0, End: 3, Data: []byte{}},
 		one,
-		merkleTree.InputSegment{Start: 5, End: 6, Data: []byte{}},
+		merkleTree.InputSegment{Start: 4, End: 7, Data: []byte{}},
 		two,
 		three,
-		merkleTree.InputSegment{Start: 11, End: 12, Data: []byte{}},
+		merkleTree.InputSegment{Start: 10, End: 13, Data: []byte{}},
 		four,
-		merkleTree.InputSegment{Start: 15, End: 28, Data: []byte{}},
+		merkleTree.InputSegment{Start: 14, End: 29, Data: []byte{}},
 		five,
-		merkleTree.InputSegment{Start: 51, End: 89, Data: []byte{}},
+		merkleTree.InputSegment{Start: 50, End: 90, Data: []byte{}},
 		six,
 		seven,
-		merkleTree.InputSegment{Start: 94, End: 12223, Data: []byte{}},
+		merkleTree.InputSegment{Start: 93, End: 12224, Data: []byte{}},
 		eigth,
-		merkleTree.InputSegment{Start: 28912, End: 16777215, Data: []byte{}},
+		merkleTree.InputSegment{Start: 28911, End: 16777215, Data: []byte{}},
 	}
 
 	sorted := merkleTree.Sort(testArr)
