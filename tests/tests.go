@@ -21,6 +21,7 @@ func main()  {
 	fmt.Print(test_6_leafs())
 	fmt.Print(test_7_leafs())
 	fmt.Print(test_15_leafs())
+	fmt.Print(TestSortSegments())
 	//fmt.Print(test_get_proof())
 	//fmt.Print(test_verify_proof())
 }
@@ -561,7 +562,7 @@ func test_15_leafs() string {
 	}
 }
 
-func TestSortSegments() {
+func TestSortSegments() string {
 
 	var testArr []merkleTree.InputSegment
 
@@ -583,12 +584,31 @@ func TestSortSegments() {
 	testArr = append(testArr, seven)
 	testArr = append(testArr, eigth)
 
-	fmt.Println("Not sorted:")
-	fmt.Println(testArr)
+	shouldSorted := []merkleTree.InputSegment{
+		merkleTree.InputSegment{Start: 0, End: 2, Data: []byte{}},
+		one,
+		merkleTree.InputSegment{Start: 5, End: 6, Data: []byte{}},
+		two,
+		three,
+		merkleTree.InputSegment{Start: 11, End: 12, Data: []byte{}},
+		four,
+		merkleTree.InputSegment{Start: 15, End: 28, Data: []byte{}},
+		five,
+		merkleTree.InputSegment{Start: 51, End: 89, Data: []byte{}},
+		six,
+		seven,
+		merkleTree.InputSegment{Start: 94, End: 12223, Data: []byte{}},
+		eigth,
+		merkleTree.InputSegment{Start: 28912, End: 16777216, Data: []byte{}},
+	}
 
 	sorted := merkleTree.Sort(testArr)
-	fmt.Println("Sorted:")
-	fmt.Println(sorted)
+
+	if reflect.DeepEqual(sorted, shouldSorted) {
+		return "TestSortSegments: true\n"
+	} else {
+		return "TestSortSegments: false\n"
+	}
 }
 
 //func test_get_proof() string {
