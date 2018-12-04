@@ -433,6 +433,7 @@ func TestSortSegments() {
 	five := merkleTree.InputSegment{Start: 29, End: 50, Data: []byte("5")}
 	six := merkleTree.InputSegment{Start: 90, End: 91, Data: []byte("6")}
 	seven := merkleTree.InputSegment{Start: 92, End: 93, Data: []byte("7")}
+	eigth := merkleTree.InputSegment{Start: 12224, End: 28911, Data: []byte("8")}
 
 	testArr = append(testArr, one)
 	testArr = append(testArr, two)
@@ -441,6 +442,7 @@ func TestSortSegments() {
 	testArr = append(testArr, five)
 	testArr = append(testArr, six)
 	testArr = append(testArr, seven)
+	testArr = append(testArr, eigth)
 
 	fmt.Println("Not sorted:")
 	fmt.Println(testArr)
