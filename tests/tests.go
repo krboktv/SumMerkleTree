@@ -1,11 +1,12 @@
 package main
 
 import (
-	"../merkleTree"
 	"bytes"
 	"fmt"
-	"github.com/ethereum/go-ethereum/crypto"
 	"reflect"
+
+	"../merkleTree"
+	"github.com/ethereum/go-ethereum/crypto"
 )
 
 var zeroHash = crypto.Keccak256([]byte{})
@@ -78,7 +79,7 @@ func test_leaf_to_node2() string {
 	}
 
 	segments := []merkleTree.InputSegment{
-		{segmentStart1, segmentEnd1,d1},
+		{segmentStart1, segmentEnd1, d1},
 		{segmentStart2, segmentEnd2, d2},
 		{segmentStart3, segmentEnd3, d3},
 		{segmentStart4, segmentEnd4, d4},
@@ -97,7 +98,6 @@ func test_leaf_to_node2() string {
 			break
 		}
 	}
-
 
 	if check == true {
 		return "test_leaf_to_node2: true\n"
@@ -158,9 +158,9 @@ func test_3_leafs() string {
 	rootHash := crypto.Keccak256(append(append(merkleTree.UintToBytesArray(segmentLength12), node12...), append(merkleTree.UintToBytesArray(segmentLength3), node3...)...))
 
 	segments := []merkleTree.InputSegment{
-		{segmentStart1, segmentEnd1,d1},
+		{segmentStart1, segmentEnd1, d1},
 		{segmentStart2, segmentEnd2, d2},
-		{segmentStart3, segmentEnd3,d3},
+		{segmentStart3, segmentEnd3, d3},
 	}
 	tree := merkleTree.NewMerkleTree(segments, crypto.Keccak256)
 
@@ -208,7 +208,7 @@ func test_4_leafs() string {
 	segments := []merkleTree.InputSegment{
 		{segmentStart1, segmentEnd1, d1},
 		{segmentStart2, segmentEnd2, d2},
-		{segmentStart3,segmentEnd3, d3},
+		{segmentStart3, segmentEnd3, d3},
 		{segmentStart4, segmentEnd4, d4},
 	}
 	tree := merkleTree.NewMerkleTree(segments, crypto.Keccak256)
@@ -328,14 +328,13 @@ func test_6_leafs() string {
 
 	rootHash := crypto.Keccak256(append(append(merkleTree.UintToBytesArray(segmentLength1234), node1234...), append(merkleTree.UintToBytesArray(segmentLength56), node56...)...))
 
-
 	segments := []merkleTree.InputSegment{
 		{segmentStart1, segmentEnd1, d1},
-		{segmentStart2,segmentEnd2, d2},
-		{segmentStart3,segmentEnd3, d3},
-		{segmentStart4,segmentEnd4, d4},
-		{segmentStart5,segmentEnd5, d5},
-		{segmentStart6,segmentEnd6, d6},
+		{segmentStart2, segmentEnd2, d2},
+		{segmentStart3, segmentEnd3, d3},
+		{segmentStart4, segmentEnd4, d4},
+		{segmentStart5, segmentEnd5, d5},
+		{segmentStart6, segmentEnd6, d6},
 	}
 	tree := merkleTree.NewMerkleTree(segments, crypto.Keccak256)
 
@@ -403,15 +402,14 @@ func test_7_leafs() string {
 
 	rootHash := crypto.Keccak256(append(append(merkleTree.UintToBytesArray(segmentLength1234), node1234...), append(merkleTree.UintToBytesArray(segmentLength567), node567...)...))
 
-
 	segments := []merkleTree.InputSegment{
 		{segmentStart1, segmentEnd1, d1},
-		{segmentStart2,segmentEnd2, d2},
-		{segmentStart3,segmentEnd3, d3},
-		{segmentStart4,segmentEnd4, d4},
-		{segmentStart5,segmentEnd5, d5},
-		{segmentStart6,segmentEnd6, d6},
-		{segmentStart7,segmentEnd7, d7},
+		{segmentStart2, segmentEnd2, d2},
+		{segmentStart3, segmentEnd3, d3},
+		{segmentStart4, segmentEnd4, d4},
+		{segmentStart5, segmentEnd5, d5},
+		{segmentStart6, segmentEnd6, d6},
+		{segmentStart7, segmentEnd7, d7},
 	}
 	tree := merkleTree.NewMerkleTree(segments, crypto.Keccak256)
 	if bytes.Equal(rootHash, tree.RootNode.Segment.Hash) && tree.RootNode.Segment.SegmentLength == rootSegmentLength {
@@ -539,24 +537,23 @@ func test_15_leafs() string {
 
 	segments := []merkleTree.InputSegment{
 		{segmentStart1, segmentEnd1, d1},
-		{segmentStart2,segmentEnd2, d2},
-		{segmentStart3,segmentEnd3, d3},
-		{segmentStart4,segmentEnd4, d4},
-		{segmentStart5,segmentEnd5, d5},
-		{segmentStart6,segmentEnd6, d6},
-		{segmentStart7,segmentEnd7, d7},
-		{segmentStart8,segmentEnd8, d8},
-		{segmentStart9,segmentEnd9, d9},
-		{segmentStart10,segmentEnd10, d10},
-		{segmentStart11,segmentEnd11, d11},
-		{segmentStart12,segmentEnd12, d12},
-		{segmentStart13,segmentEnd13, d13},
-		{segmentStart14,segmentEnd14, d14},
-		{segmentStart15,segmentEnd15, d15},
+		{segmentStart2, segmentEnd2, d2},
+		{segmentStart3, segmentEnd3, d3},
+		{segmentStart4, segmentEnd4, d4},
+		{segmentStart5, segmentEnd5, d5},
+		{segmentStart6, segmentEnd6, d6},
+		{segmentStart7, segmentEnd7, d7},
+		{segmentStart8, segmentEnd8, d8},
+		{segmentStart9, segmentEnd9, d9},
+		{segmentStart10, segmentEnd10, d10},
+		{segmentStart11, segmentEnd11, d11},
+		{segmentStart12, segmentEnd12, d12},
+		{segmentStart13, segmentEnd13, d13},
+		{segmentStart14, segmentEnd14, d14},
+		{segmentStart15, segmentEnd15, d15},
 	}
 	tree := merkleTree.NewMerkleTree(segments, crypto.Keccak256)
-fmt.Print(tree.RootNode.Segment.SegmentLength)
-	fmt.Print("\n")
+
 	if bytes.Equal(rootHash, tree.RootNode.Segment.Hash) && tree.RootNode.Segment.SegmentLength == rootSegmentLength {
 		return "test_15_leafs: true\n"
 	} else {
@@ -564,74 +561,36 @@ fmt.Print(tree.RootNode.Segment.SegmentLength)
 	}
 }
 
-//func test_8_leafs() string {
-//	d1 := []byte("Привет")
-//	d2 := []byte("Это")
-//	d3 := []byte("Второй")
-//	d4 := []byte("Тест")
-//	d5 := []byte("Let's")
-//	d6 := []byte("Check")
-//	d7 := []byte("It")
-//	d8 := []byte("!")
-//
-//	segmentLength1 := uint32(1)
-//	segmentLength2 := uint32(1)
-//	segmentLength3 := uint32(1)
-//	segmentLength4 := uint32(1)
-//	segmentLength5 := uint32(1)
-//	segmentLength6 := uint32(1)
-//	segmentLength7 := uint32(1)
-//	segmentLength8 := uint32(1)
-//
-//	segmentLength12 := segmentLength1 + segmentLength2
-//	segmentLength34 := segmentLength3 + segmentLength4
-//	segmentLength56 := segmentLength5 + segmentLength6
-//	segmentLength78 := segmentLength7 + segmentLength8
-//
-//	segmentLength1234 := segmentLength12 + segmentLength34
-//	segmentLength5678 := segmentLength56 + segmentLength78
-//
-//	rootSegmentLength := segmentLength1234 + segmentLength5678
-//
-//	node1 := crypto.Keccak256(append(merkleTree.UintToBytesArray(segmentLength1), d1...))
-//	node2 := crypto.Keccak256(append(merkleTree.UintToBytesArray(segmentLength2), d2...))
-//	node3 := crypto.Keccak256(append(merkleTree.UintToBytesArray(segmentLength3), d3...))
-//	node4 := crypto.Keccak256(append(merkleTree.UintToBytesArray(segmentLength4), d4...))
-//	node5 := crypto.Keccak256(append(merkleTree.UintToBytesArray(segmentLength5), d5...))
-//	node6 := crypto.Keccak256(append(merkleTree.UintToBytesArray(segmentLength6), d6...))
-//	node7 := crypto.Keccak256(append(merkleTree.UintToBytesArray(segmentLength7), d7...))
-//	node8 := crypto.Keccak256(append(merkleTree.UintToBytesArray(segmentLength8), d8...))
-//
-//	node12 := crypto.Keccak256(append(append(merkleTree.UintToBytesArray(segmentLength1), node1...), append(merkleTree.UintToBytesArray(segmentLength2), node2...)...))
-//	node34 := crypto.Keccak256(append(append(merkleTree.UintToBytesArray(segmentLength3), node3...), append(merkleTree.UintToBytesArray(segmentLength4), node4...)...))
-//	node56 := crypto.Keccak256(append(append(merkleTree.UintToBytesArray(segmentLength5), node5...), append(merkleTree.UintToBytesArray(segmentLength6), node6...)...))
-//	node78 := crypto.Keccak256(append(append(merkleTree.UintToBytesArray(segmentLength7), node7...), append(merkleTree.UintToBytesArray(segmentLength8), node8...)...))
-//
-//	node1234 := crypto.Keccak256(append(append(merkleTree.UintToBytesArray(segmentLength12), node12...), append(merkleTree.UintToBytesArray(segmentLength34), node34...)...))
-//	node5678 := crypto.Keccak256(append(append(merkleTree.UintToBytesArray(segmentLength56), node56...), append(merkleTree.UintToBytesArray(segmentLength78), node78...)...))
-//
-//	rootHash := crypto.Keccak256(append(append(merkleTree.UintToBytesArray(segmentLength1234), node1234...), append(merkleTree.UintToBytesArray(segmentLength5678), node5678...)...))
-//
-//
-//	segments := []merkleTree.Segment{
-//		{segmentLength1, d1},
-//		{segmentLength2, d2},
-//		{segmentLength3, d3},
-//		{segmentLength4, d4},
-//		{segmentLength5, d5},
-//		{segmentLength6, d6},
-//		{segmentLength7, d7},
-//		{segmentLength8, d8},
-//	}
-//	tree := merkleTree.NewMerkleTree(segments, crypto.Keccak256)
-//
-//	if bytes.Equal(rootHash, tree.RootNode.Segment.Data) && tree.RootNode.Segment.SegmentLength == rootSegmentLength {
-//		return "test_8_leafs: true\n"
-//	} else {
-//		return "test_8_leafs: false\n"
-//	}
-//}
-//
+func TestSortSegments() {
+
+	var testArr []merkleTree.InputSegment
+
+	one := merkleTree.InputSegment{Start: 3, End: 4, Data: []byte("1")}
+	two := merkleTree.InputSegment{Start: 7, End: 8, Data: []byte("2")}
+	three := merkleTree.InputSegment{Start: 9, End: 10, Data: []byte("3")}
+	four := merkleTree.InputSegment{Start: 13, End: 14, Data: []byte("4")}
+	five := merkleTree.InputSegment{Start: 29, End: 50, Data: []byte("5")}
+	six := merkleTree.InputSegment{Start: 90, End: 91, Data: []byte("6")}
+	seven := merkleTree.InputSegment{Start: 92, End: 93, Data: []byte("7")}
+	eigth := merkleTree.InputSegment{Start: 12224, End: 28911, Data: []byte("8")}
+
+	testArr = append(testArr, one)
+	testArr = append(testArr, two)
+	testArr = append(testArr, three)
+	testArr = append(testArr, four)
+	testArr = append(testArr, five)
+	testArr = append(testArr, six)
+	testArr = append(testArr, seven)
+	testArr = append(testArr, eigth)
+
+	fmt.Println("Not sorted:")
+	fmt.Println(testArr)
+
+	sorted := merkleTree.Sort(testArr)
+	fmt.Println("Sorted:")
+	fmt.Println(sorted)
+}
+
 //func test_get_proof() string {
 //	d1 := []byte("Привет")
 //	d2 := []byte("Это")

@@ -2,6 +2,8 @@ package merkleTree
 
 import (
 	"encoding/binary"
+	"sort"
+
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
@@ -59,7 +61,7 @@ func MakeLeaf(segment *InputSegment, hashFunc func(data ...[]byte) []byte) *Merk
 	}
 }
 
-func NewMerkleNode(left, right *MerkleNode, hashFunc func(data ...[]byte) []byte) *MerkleNode  {
+func NewMerkleNode(left, right *MerkleNode, hashFunc func(data ...[]byte) []byte) *MerkleNode {
 	var node MerkleNode
 
 	nodeSegment := getNodeHashAndLength(
@@ -119,6 +121,81 @@ func NewMerkleTree(segment []InputSegment, hashFunc func(data ...[]byte) []byte)
 	tree := MerkleTree{levels, &nodes[0]}
 
 	return &tree
+}
+
+// func Sort(IS []InputSegment) []InputSegment {
+
+// 	sort.SliceStable(IS, func(i, j int) bool {
+// 		return IS[i].Start < IS[j].Start
+// 	})
+
+// 	var first InputSegment
+// 	var second InputSegment
+
+// 	var sortedIS []InputSegment
+
+// 	for i := 0; i < len(IS); i++ {
+// 		if len(IS)%2 != 0 && i == 2 {
+// 			fmt.Println("1")
+// 		} else {
+// 			first = IS[i]
+// 			second = IS[i+1]
+//
+
+//
+// 		}
+// 		// to the begin of slice
+
+// 		// to the end of slice
+// 		if i == len(IS)-2 && second.End != 100 {
+// 			endS := InputSegment{Start: second.End + 1, End: 100, Data: []byte("")}
+// 			sortedIS = append(sortedIS, endS)
+// 		}
+// 	}
+// 	return sortedIS
+// }
+
+func Sort(IS []InputSegment) []InputSegment {
+
+	sort.SliceStable(IS, func(i, j int) bool {
+		return IS[i].Start < IS[j].Start
+	})
+
+	var sortedIS []InputSegment
+
+	for i := 0; i <= len(IS); i++ {
+
+		// Check for start
+		if i == 0 && IS[i].Start != 0 {
+			startSturct := InputSegment{Start: 0, End: IS[i].Start - 1, Data: []byte("")}
+			sortedIS = append(sortedIS, startSturct)
+		}
+
+		// Check for end
+		if i == len(IS)-1 {
+			if IS[i].End != 16777216 {
+				endS := InputSegment{Start: IS[i].End + 1, End: 16777216, Data: []byte("")}
+				sortedIS = append(sortedIS, IS[i])
+				sortedIS = append(sortedIS, endS)
+			} else {
+				sortedIS = append(sortedIS, IS[i])
+			}
+			return sortedIS
+		}
+
+		first := IS[i]
+		second := IS[i+1]
+
+		if second.Start-first.End > 1 {
+			empty := InputSegment{Start: first.End + 1, End: second.Start - 1, Data: []byte("")}
+			sortedIS = append(sortedIS, first)
+			sortedIS = append(sortedIS, empty)
+		} else {
+			sortedIS = append(sortedIS, first)
+		}
+
+	}
+	return sortedIS
 }
 
 //func (tree *MerkleTree) GetProof(segment Segment) (*MerkleProof, error){
