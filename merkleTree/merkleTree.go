@@ -110,9 +110,9 @@ func NewMerkleTree(segment []InputSegment, hashFunc func(data ...[]byte) []byte)
 		nodes = level
 		levels = append(levels, level)
 
-		if len(nodes) == 1 && len(notBalancedNodes) != 0 {
-			nodes = append(nodes, notBalancedNodes...)
-			notBalancedNodes = []MerkleNode{}
+		if len(nodes)%2 != 0 && len(notBalancedNodes) != 0 {
+			nodes = append(nodes, notBalancedNodes[0])
+			notBalancedNodes = notBalancedNodes[1:]
 		}
 	}
 
