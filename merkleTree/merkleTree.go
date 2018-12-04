@@ -7,6 +7,8 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
+const plasmaLength = 16777215
+
 //type MerkleProof struct {
 //	Tree       [][]MerkleNode
 //	RootHash   []byte
@@ -140,8 +142,8 @@ func PrepareSegments(list []InputSegment) []InputSegment {
 
 		// Check for end
 		if i == len(list)-1 {
-			if list[i].End != 16777215 {
-				endS := InputSegment{Start: list[i].End, End: 16777215, Data: []byte{}}
+			if list[i].End != plasmaLength {
+				endS := InputSegment{Start: list[i].End, End: plasmaLength, Data: []byte{}}
 				listWithEmptyStruct = append(listWithEmptyStruct, list[i])
 				listWithEmptyStruct = append(listWithEmptyStruct, endS)
 			} else {
@@ -155,7 +157,7 @@ func PrepareSegments(list []InputSegment) []InputSegment {
 
 		if nextEl.Start-el.End > 1 {
 			empty := InputSegment{Start: el.End, End: nextEl.Start, Data: []byte{}}
-			listWithEmptyStruct = append(list, el)
+			listWithEmptyStruct = append(listWithEmptyStruct, el)
 			listWithEmptyStruct = append(listWithEmptyStruct, empty)
 		} else {
 			listWithEmptyStruct = append(listWithEmptyStruct, el)
