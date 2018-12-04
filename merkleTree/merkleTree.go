@@ -2,33 +2,33 @@ package merkleTree
 
 import (
 	"encoding/binary"
+
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
 type MerkleProof struct {
-	Tree     [][]MerkleNode
-	RootHash []byte
+	Tree       [][]MerkleNode
+	RootHash   []byte
 	RootLength uint32
-	Segment  Segment
+	Segment    Segment
 }
 
 type MerkleTree struct {
-	Levels    [][]MerkleNode
-	RootNode  *MerkleNode
+	Levels   [][]MerkleNode
+	RootNode *MerkleNode
 }
 
 type MerkleNode struct {
-	Left     *MerkleNode
-	Right    *MerkleNode
-	Segment  *Segment
+	Left    *MerkleNode
+	Right   *MerkleNode
+	Segment *Segment
 }
 
 type InputSegment struct {
 	Start uint32
-	End uint32
-	Data []byte
+	End   uint32
+	Data  []byte
 }
-
 
 type Segment struct {
 	SegmentLength uint32
@@ -60,7 +60,15 @@ func MakeLeaf(segment *InputSegment, hashFunc func(data ...[]byte) []byte) *Merk
 	}
 }
 
+<<<<<<< HEAD
 func NewMerkleNode(left, right *MerkleNode, hashFunc func(data ...[]byte) []byte) *MerkleNode  {
+=======
+func sortSegments(segment []InputSegment) {
+	//MergeSort()
+}
+
+func NewMerkleNode(left, right *MerkleNode, hashFunc func(data ...[]byte) []byte) *MerkleNode {
+>>>>>>> 8549bf343fdd591b26c3694dfa42c51b460f57e7
 	var node MerkleNode
 
 	nodeSegment := getNodeHashAndLength(
@@ -69,7 +77,7 @@ func NewMerkleNode(left, right *MerkleNode, hashFunc func(data ...[]byte) []byte
 		left.Segment.Hash,
 		right.Segment.Hash,
 		crypto.Keccak256,
-		)
+	)
 	node.Segment = nodeSegment
 
 	node.Left = left
@@ -79,7 +87,7 @@ func NewMerkleNode(left, right *MerkleNode, hashFunc func(data ...[]byte) []byte
 }
 
 func NewMerkleTree(segment []InputSegment, hashFunc func(data ...[]byte) []byte) *MerkleTree {
-	var nodes  []MerkleNode
+	var nodes []MerkleNode
 	var levels [][]MerkleNode
 	var notBalancedNodes []MerkleNode
 
@@ -89,7 +97,7 @@ func NewMerkleTree(segment []InputSegment, hashFunc func(data ...[]byte) []byte)
 	}
 
 	if len(nodes)%2 != 0 {
-		notBalancedNodes = append(notBalancedNodes,  nodes[len(nodes)-1])
+		notBalancedNodes = append(notBalancedNodes, nodes[len(nodes)-1])
 		nodes = nodes[:len(nodes)-1]
 	}
 
@@ -99,7 +107,7 @@ func NewMerkleTree(segment []InputSegment, hashFunc func(data ...[]byte) []byte)
 		var level []MerkleNode
 
 		lastNodeIndex := len(nodes) - 1
-		for j := 0; j <= lastNodeIndex; j+=2 {
+		for j := 0; j <= lastNodeIndex; j += 2 {
 			if j == lastNodeIndex && j%2 != 0 {
 				notBalancedNodes = append(notBalancedNodes, nodes[j])
 			} else {
