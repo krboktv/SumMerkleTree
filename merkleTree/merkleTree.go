@@ -2,6 +2,8 @@ package merkleTree
 
 import (
 	"encoding/binary"
+	"sort"
+
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
@@ -59,7 +61,7 @@ func MakeLeaf(segment *InputSegment, hashFunc func(data ...[]byte) []byte) *Merk
 	}
 }
 
-func NewMerkleNode(left, right *MerkleNode, hashFunc func(data ...[]byte) []byte) *MerkleNode  {
+func NewMerkleNode(left, right *MerkleNode, hashFunc func(data ...[]byte) []byte) *MerkleNode {
 	var node MerkleNode
 
 	nodeSegment := getNodeHashAndLength(
@@ -119,6 +121,13 @@ func NewMerkleTree(segment []InputSegment, hashFunc func(data ...[]byte) []byte)
 	tree := MerkleTree{levels, &nodes[0]}
 
 	return &tree
+}
+
+func Sort(IS []InputSegment) []InputSegment {
+	sort.SliceStable(IS, func(i, j int) bool {
+		return IS[i].Start < IS[j].Start
+	})
+	return IS
 }
 
 //func (tree *MerkleTree) GetProof(segment Segment) (*MerkleProof, error){
