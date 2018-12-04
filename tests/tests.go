@@ -11,7 +11,7 @@ import (
 
 var zeroHash = crypto.Keccak256([]byte{})
 
-func main()  {
+func main() {
 	fmt.Print(test_leaf_to_node1())
 	fmt.Print(test_leaf_to_node2())
 	fmt.Print(test_New_Merkle_Node_with_left_and_right_nodes())
@@ -603,7 +603,7 @@ func TestSortSegments() string {
 		merkleTree.InputSegment{Start: 28911, End: 16777215, Data: []byte{}},
 	}
 
-	sorted := merkleTree.Sort(testArr)
+	sorted := merkleTree.PrepareSegments(testArr)
 
 	if reflect.DeepEqual(sorted, shouldSorted) {
 		return "TestSortSegments: true\n"
@@ -692,7 +692,7 @@ func test_tree_with_sort() string {
 
 	rootHash := crypto.Keccak256(append(append(merkleTree.UintToBytesArray(segmentLength12345678), node12345678...), append(merkleTree.UintToBytesArray(segmentLength910), node910...)...))
 
-	segments := merkleTree.Sort([]merkleTree.InputSegment{
+	segments := merkleTree.PrepareSegments([]merkleTree.InputSegment{
 		{segmentStart1, segmentEnd1, d1},
 		{segmentStart2, segmentEnd2, d2},
 		{segmentStart3, segmentEnd3, d3},

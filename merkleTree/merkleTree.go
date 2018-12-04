@@ -123,47 +123,46 @@ func NewMerkleTree(segment []InputSegment, hashFunc func(data ...[]byte) []byte)
 	return &tree
 }
 
-func Sort(IS []InputSegment) []InputSegment {
+func PrepareSegments(list []InputSegment) []InputSegment {
 
-	sort.SliceStable(IS, func(i, j int) bool {
-		return IS[i].Start < IS[j].Start
+	sort.SliceStable(list, func(i, j int) bool {
+		return list[i].Start < list[j].Start
 	})
 
-	var sortedIS []InputSegment
+	var listWithEmptyStruct []InputSegment
 
-	for i := 0; i <= len(IS); i++ {
-
+	for i := 0; i <= len(list); i++ {
 		// Check for start
-		if i == 0 && IS[i].Start != 0 {
-			startSturct := InputSegment{Start: 0, End: IS[i].Start, Data: []byte{}}
-			sortedIS = append(sortedIS, startSturct)
+		if i == 0 && list[i].Start != 0 {
+			startSturct := InputSegment{Start: 0, End: list[i].Start, Data: []byte{}}
+			listWithEmptyStruct = append(listWithEmptyStruct, startSturct)
 		}
 
 		// Check for end
-		if i == len(IS)-1 {
-			if IS[i].End != 16777215 {
-				endS := InputSegment{Start: IS[i].End, End: 16777215, Data: []byte{}}
-				sortedIS = append(sortedIS, IS[i])
-				sortedIS = append(sortedIS, endS)
+		if i == len(list)-1 {
+			if list[i].End != 16777215 {
+				endS := InputSegment{Start: list[i].End, End: 16777215, Data: []byte{}}
+				listWithEmptyStruct = append(listWithEmptyStruct, list[i])
+				listWithEmptyStruct = append(listWithEmptyStruct, endS)
 			} else {
-				sortedIS = append(sortedIS, IS[i])
+				listWithEmptyStruct = append(listWithEmptyStruct, list[i])
 			}
-			return sortedIS
+			return listWithEmptyStruct
 		}
 
-		first := IS[i]
-		second := IS[i+1]
+		el := list[i]
+		nextEl := list[i+1]
 
-		if second.Start-first.End > 1 {
-			empty := InputSegment{Start: first.End, End: second.Start, Data: []byte{}}
-			sortedIS = append(sortedIS, first)
-			sortedIS = append(sortedIS, empty)
+		if nextEl.Start-el.End > 1 {
+			empty := InputSegment{Start: el.End, End: nextEl.Start, Data: []byte{}}
+			listWithEmptyStruct = append(list, el)
+			listWithEmptyStruct = append(listWithEmptyStruct, empty)
 		} else {
-			sortedIS = append(sortedIS, first)
+			listWithEmptyStruct = append(listWithEmptyStruct, el)
 		}
 
 	}
-	return sortedIS
+	return listWithEmptyStruct
 }
 
 //func (tree *MerkleTree) GetProof(segment Segment) (*MerkleProof, error){
