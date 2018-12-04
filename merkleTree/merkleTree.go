@@ -60,11 +60,6 @@ func MakeLeaf(segment *InputSegment, hashFunc func(data ...[]byte) []byte) *Merk
 	}
 }
 
-func sortSegments(segment []InputSegment)  {
-	map
-	//MergeSort()
-}
-
 func NewMerkleNode(left, right *MerkleNode, hashFunc func(data ...[]byte) []byte) *MerkleNode  {
 	var node MerkleNode
 
@@ -87,8 +82,6 @@ func NewMerkleTree(segment []InputSegment, hashFunc func(data ...[]byte) []byte)
 	var nodes  []MerkleNode
 	var levels [][]MerkleNode
 	var notBalancedNodes []MerkleNode
-
-	for
 
 	for _, s := range segment {
 		node := MakeLeaf(&s, hashFunc)
