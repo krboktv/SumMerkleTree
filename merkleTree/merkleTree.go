@@ -123,38 +123,6 @@ func NewMerkleTree(segment []InputSegment, hashFunc func(data ...[]byte) []byte)
 	return &tree
 }
 
-// func Sort(IS []InputSegment) []InputSegment {
-
-// 	sort.SliceStable(IS, func(i, j int) bool {
-// 		return IS[i].Start < IS[j].Start
-// 	})
-
-// 	var first InputSegment
-// 	var second InputSegment
-
-// 	var sortedIS []InputSegment
-
-// 	for i := 0; i < len(IS); i++ {
-// 		if len(IS)%2 != 0 && i == 2 {
-// 			fmt.Println("1")
-// 		} else {
-// 			first = IS[i]
-// 			second = IS[i+1]
-//
-
-//
-// 		}
-// 		// to the begin of slice
-
-// 		// to the end of slice
-// 		if i == len(IS)-2 && second.End != 100 {
-// 			endS := InputSegment{Start: second.End + 1, End: 100, Data: []byte("")}
-// 			sortedIS = append(sortedIS, endS)
-// 		}
-// 	}
-// 	return sortedIS
-// }
-
 func Sort(IS []InputSegment) []InputSegment {
 
 	sort.SliceStable(IS, func(i, j int) bool {
@@ -167,14 +135,14 @@ func Sort(IS []InputSegment) []InputSegment {
 
 		// Check for start
 		if i == 0 && IS[i].Start != 0 {
-			startSturct := InputSegment{Start: 0, End: IS[i].Start, Data: []byte("")}
+			startSturct := InputSegment{Start: 0, End: IS[i].Start, Data: []byte{}}
 			sortedIS = append(sortedIS, startSturct)
 		}
 
 		// Check for end
 		if i == len(IS)-1 {
 			if IS[i].End != 16777215 {
-				endS := InputSegment{Start: IS[i].End, End: 16777215, Data: []byte("")}
+				endS := InputSegment{Start: IS[i].End, End: 16777215, Data: []byte{}}
 				sortedIS = append(sortedIS, IS[i])
 				sortedIS = append(sortedIS, endS)
 			} else {
@@ -187,7 +155,7 @@ func Sort(IS []InputSegment) []InputSegment {
 		second := IS[i+1]
 
 		if second.Start-first.End > 1 {
-			empty := InputSegment{Start: first.End, End: second.Start, Data: []byte("")}
+			empty := InputSegment{Start: first.End, End: second.Start, Data: []byte{}}
 			sortedIS = append(sortedIS, first)
 			sortedIS = append(sortedIS, empty)
 		} else {
