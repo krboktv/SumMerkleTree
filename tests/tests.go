@@ -22,6 +22,7 @@ func main()  {
 	fmt.Print(test_7_leafs())
 	fmt.Print(test_15_leafs())
 	fmt.Print(TestSortSegments())
+	fmt.Print(test_tree_with_sort())
 	//fmt.Print(test_get_proof())
 	//fmt.Print(test_verify_proof())
 }
@@ -608,6 +609,116 @@ func TestSortSegments() string {
 		return "TestSortSegments: true\n"
 	} else {
 		return "TestSortSegments: false\n"
+	}
+}
+
+func test_tree_with_sort() string {
+	d1 := []byte("Привет")
+	d2 := []byte("Это")
+	d3 := []byte("Sort")
+	d4 := []byte("Тест")
+	d5 := []byte("Let's go")
+	zeroByteArray := []byte{}
+	rootSegmentLength := uint32(16777216 - 1)
+
+	segmentStart1 := uint32(123)
+	segmentEnd1 := uint32(234)
+	segmentLength1 := uint32(segmentEnd1 - segmentStart1)
+	segmentStart2 := uint32(244)
+	segmentEnd2 := uint32(444)
+	segmentLength2 := uint32(segmentEnd2 - segmentStart2)
+	segmentStart3 := uint32(444)
+	segmentEnd3 := uint32(555)
+	segmentLength3 := uint32(segmentEnd3 - segmentStart3)
+	segmentStart4 := uint32(1023)
+	segmentEnd4 := uint32(1111)
+	segmentLength4 := uint32(segmentEnd4 - segmentStart4)
+	segmentStart5 := uint32(1200)
+	segmentEnd5 := uint32(3000)
+	segmentLength5 := uint32(segmentEnd5 - segmentStart5)
+
+	segmentStartZero0 := uint32(0)
+	segmentEndZero0 := segmentStart1
+	segmentLengthZero0 := uint32(segmentEndZero0 - segmentStartZero0)
+
+	segmentStartZero1 := segmentEnd1
+	segmentEndZero1 := segmentStart2
+	segmentLengthZero1 := uint32(segmentEndZero1 - segmentStartZero1)
+
+	segmentStartZero3 := segmentEnd3
+	segmentEndZero3 := segmentStart4
+	segmentLengthZero3 := uint32(segmentEndZero3 - segmentStartZero3)
+
+	segmentStartZero4 := segmentEnd4
+	segmentEndZero4 := segmentStart5
+	segmentLengthZero4 := uint32(segmentEndZero4 - segmentStartZero4)
+
+	segmentStartZero5 := segmentEnd5
+	segmentEndZero5 := rootSegmentLength
+	segmentLengthZero5 := uint32(segmentEndZero5 - segmentStartZero5)
+
+	segmentLength12 := segmentLengthZero0 + segmentLength1
+	segmentLength34 := segmentLengthZero1 + segmentLength2
+	segmentLength56 := segmentLength3 + segmentLengthZero3
+	segmentLength78 := segmentLength4 + segmentLengthZero4
+	segmentLength910 := segmentLength5 + segmentLengthZero5
+
+	segmentLength1234 := segmentLength12 + segmentLength34
+	segmentLength5678 := segmentLength56 + segmentLength78
+
+	segmentLength12345678 := segmentLength1234 + segmentLength5678
+
+	node1 := crypto.Keccak256(append(merkleTree.UintToBytesArray(segmentLengthZero0), zeroByteArray...))
+	node2 := crypto.Keccak256(append(merkleTree.UintToBytesArray(segmentLength1), d1...))
+	node3 := crypto.Keccak256(append(merkleTree.UintToBytesArray(segmentLengthZero1), zeroByteArray...))
+	node4 := crypto.Keccak256(append(merkleTree.UintToBytesArray(segmentLength2), d2...))
+	node5 := crypto.Keccak256(append(merkleTree.UintToBytesArray(segmentLength3), d3...))
+	node6 := crypto.Keccak256(append(merkleTree.UintToBytesArray(segmentLengthZero3), zeroByteArray...))
+	node7 := crypto.Keccak256(append(merkleTree.UintToBytesArray(segmentLength4), d4...))
+	node8 := crypto.Keccak256(append(merkleTree.UintToBytesArray(segmentLengthZero4), zeroByteArray...))
+	node9 := crypto.Keccak256(append(merkleTree.UintToBytesArray(segmentLength5), d5...))
+	node10 := crypto.Keccak256(append(merkleTree.UintToBytesArray(segmentLengthZero5), zeroByteArray...))
+
+	node12 := crypto.Keccak256(append(append(merkleTree.UintToBytesArray(segmentLengthZero0), node1...), append(merkleTree.UintToBytesArray(segmentLength1), node2...)...))
+	node34 := crypto.Keccak256(append(append(merkleTree.UintToBytesArray(segmentLengthZero1), node3...), append(merkleTree.UintToBytesArray(segmentLength2), node4...)...))
+	node56 := crypto.Keccak256(append(append(merkleTree.UintToBytesArray(segmentLength3), node5...), append(merkleTree.UintToBytesArray(segmentLengthZero3), node6...)...))
+	node78 := crypto.Keccak256(append(append(merkleTree.UintToBytesArray(segmentLength4), node7...), append(merkleTree.UintToBytesArray(segmentLengthZero4), node8...)...))
+	node910 := crypto.Keccak256(append(append(merkleTree.UintToBytesArray(segmentLength5), node9...), append(merkleTree.UintToBytesArray(segmentLengthZero5), node10...)...))
+
+	node1234 := crypto.Keccak256(append(append(merkleTree.UintToBytesArray(segmentLength12), node12...), append(merkleTree.UintToBytesArray(segmentLength34), node34...)...))
+	node5678 := crypto.Keccak256(append(append(merkleTree.UintToBytesArray(segmentLength56), node56...), append(merkleTree.UintToBytesArray(segmentLength78), node78...)...))
+
+	node12345678 := crypto.Keccak256(append(append(merkleTree.UintToBytesArray(segmentLength1234), node1234...), append(merkleTree.UintToBytesArray(segmentLength5678), node5678...)...))
+
+	rootHash := crypto.Keccak256(append(append(merkleTree.UintToBytesArray(segmentLength12345678), node12345678...), append(merkleTree.UintToBytesArray(segmentLength910), node910...)...))
+
+	segments := merkleTree.Sort([]merkleTree.InputSegment{
+		{segmentStart1, segmentEnd1, d1},
+		{segmentStart2, segmentEnd2, d2},
+		{segmentStart3, segmentEnd3, d3},
+		{segmentStart4, segmentEnd4, d4},
+		{segmentStart5, segmentEnd5, d5},
+	})
+
+	shouldSegments := []merkleTree.InputSegment{
+		{0, segmentStart1, zeroByteArray},
+		{segmentStart1, segmentEnd1, d1},
+		{segmentEnd1, segmentStart2, zeroByteArray},
+		{segmentStart2, segmentEnd2, d2},
+		{segmentStart3, segmentEnd3, d3},
+		{segmentEnd3, segmentStart4, zeroByteArray},
+		{segmentStart4, segmentEnd4, d4},
+		{segmentEnd4, segmentStart5, zeroByteArray},
+		{segmentStart5, segmentEnd5, d5},
+		{segmentEnd5, rootSegmentLength, zeroByteArray},
+	}
+
+	tree := merkleTree.NewMerkleTree(segments, crypto.Keccak256)
+
+	if bytes.Equal(rootHash, tree.RootNode.Segment.Hash) && tree.RootNode.Segment.SegmentLength == rootSegmentLength && reflect.DeepEqual(segments, shouldSegments) {
+		return "test_tree_with_sort: true\n"
+	} else {
+		return "test_tree_with_sort: false\n"
 	}
 }
 
