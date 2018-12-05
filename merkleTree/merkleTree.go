@@ -16,7 +16,7 @@ type ProofStep struct {
 }
 
 type MerkleTree struct {
-	Levels   [][]MerkleNode
+	Levels   []MerkleNode
 	RootNode *MerkleNode
 }
 
@@ -54,10 +54,7 @@ func getNodeHashAndLength(leftLength uint32, rightLength uint32, leftHash []byte
 func MakeLeaf(segment *InputSegment, hashFunc func(data ...[]byte) []byte) *MerkleNode {
 	segmentLength := segment.End - segment.Start
 	return &MerkleNode{
-		nil,
-		nil,
-		nil,
-		&Segment{
+		Segment: &Segment{
 			segmentLength,
 			hashFunc(append(UintToBytesArray(segmentLength), segment.Data...)),
 		},
@@ -81,7 +78,7 @@ func NewMerkleNode(left, right *MerkleNode, hashFunc func(data ...[]byte) []byte
 
 func NewMerkleTree(segment []InputSegment, hashFunc func(data ...[]byte) []byte) *MerkleTree {
 	var nodes []MerkleNode
-	var levels [][]MerkleNode
+	var buckets []MerkleNode
 
 	for i := 0; i < len(segment); i+=2 {
 		var node1 *MerkleNode
@@ -95,35 +92,32 @@ func NewMerkleTree(segment []InputSegment, hashFunc func(data ...[]byte) []byte)
 			nodes = append(nodes, *node1)
 		}
 	}
-	levels = [][]MerkleNode{nodes}
 
-	for len(nodes) > 1 {
+	buckets = nodes[:]
+
+	for len(buckets) != 1 {
 		var level []MerkleNode
 
-		lastNodeIndex := len(nodes) - 1
-		for j := 0; j <= lastNodeIndex; j += 2 {
-			if j == lastNodeIndex && j%2 == 0 {
-				nodes = append(nodes, nodes[j])
-				level = append(level, nodes[j])
+		for len(buckets) > 0 {
+			if len(buckets) >= 2 {
+				node1 := buckets[0]
+				node2 := buckets[1]
+				buckets = buckets[2:]
+				parent := NewMerkleNode(&node1, &node2, hashFunc)
+				node1.Parent = parent
+				node2.Parent = parent
+				node1.Right = &node2
+				node2.Left = &node1
+				level = append(level, *parent)
 			} else {
-				node := NewMerkleNode(&nodes[j], &nodes[j+1], hashFunc)
-				nodes[j].Parent = node
-				nodes[j+1].Parent = node
-				node.Right = &nodes[j]
-				node.Left = &nodes[j+1]
-				level = append(level, *node)
+				level = append(level, buckets[len(buckets)-1])
+				buckets = []MerkleNode{}
 			}
 		}
-
-		nodes = level
-		if len(level)%2 == 0 || len(level) == 1 {
-			levels = append(levels, level)
-		} else {
-			levels = append(levels, level[:len(level)-1])
-		}
+		buckets = level
 	}
 
-	tree := MerkleTree{levels, &nodes[0]}
+	tree := MerkleTree{nodes, &buckets[0]}
 
 	return &tree
 }
@@ -172,7 +166,7 @@ func PrepareSegments(list []InputSegment) []InputSegment {
 
 func (tree *MerkleTree) GetProof(index int) []ProofStep {
 	var proof []ProofStep
-	curr := tree.Levels[0][index]
+	curr := tree.Levels[index]
 
 	for curr.Parent != nil {
 		var node *MerkleNode
