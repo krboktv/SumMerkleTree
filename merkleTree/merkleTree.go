@@ -1,6 +1,7 @@
 package merkleTree
 
 import (
+	"bytes"
 	"encoding/binary"
 	"sort"
 
@@ -9,12 +10,10 @@ import (
 
 const plasmaLength = 16777215
 
-//type MerkleProof struct {
-//	Tree       [][]MerkleNode
-//	RootHash   []byte
-//	RootLength uint32
-//	Segment    Segment
-//}
+type ProofStep struct {
+	Node  *MerkleNode
+	Right *MerkleNode
+}
 
 type MerkleTree struct {
 	Levels   [][]MerkleNode
@@ -22,9 +21,10 @@ type MerkleTree struct {
 }
 
 type MerkleNode struct {
-	Left    *MerkleNode
-	Right   *MerkleNode
-	Segment *Segment
+	Left 		 *MerkleNode
+	Right 		 *MerkleNode
+	Parent 		 *MerkleNode
+	Segment 	 *Segment
 }
 
 type InputSegment struct {
@@ -56,6 +56,7 @@ func MakeLeaf(segment *InputSegment, hashFunc func(data ...[]byte) []byte) *Merk
 	return &MerkleNode{
 		nil,
 		nil,
+		nil,
 		&Segment{
 			segmentLength,
 			hashFunc(append(UintToBytesArray(segmentLength), segment.Data...)),
@@ -75,27 +76,25 @@ func NewMerkleNode(left, right *MerkleNode, hashFunc func(data ...[]byte) []byte
 	)
 	node.Segment = nodeSegment
 
-	node.Left = left
-	node.Right = right
-
 	return &node
 }
 
 func NewMerkleTree(segment []InputSegment, hashFunc func(data ...[]byte) []byte) *MerkleTree {
 	var nodes []MerkleNode
 	var levels [][]MerkleNode
-	var notBalancedNodes []MerkleNode
 
-	for _, s := range segment {
-		node := MakeLeaf(&s, hashFunc)
-		nodes = append(nodes, *node)
+	for i := 0; i < len(segment); i+=2 {
+		var node1 *MerkleNode
+		node1 = MakeLeaf(&segment[i], hashFunc)
+		if i != len(segment) - 1 {
+			node2 := MakeLeaf(&segment[i+1], hashFunc)
+			node2.Left = node1
+			node1.Right = node2
+			nodes = append(nodes, *node1, *node2)
+		} else {
+			nodes = append(nodes, *node1)
+		}
 	}
-
-	if len(nodes)%2 != 0 {
-		notBalancedNodes = append(notBalancedNodes, nodes[len(nodes)-1])
-		nodes = nodes[:len(nodes)-1]
-	}
-
 	levels = [][]MerkleNode{nodes}
 
 	for len(nodes) > 1 {
@@ -104,19 +103,23 @@ func NewMerkleTree(segment []InputSegment, hashFunc func(data ...[]byte) []byte)
 		lastNodeIndex := len(nodes) - 1
 		for j := 0; j <= lastNodeIndex; j += 2 {
 			if j == lastNodeIndex && j%2 == 0 {
-				notBalancedNodes = append([]MerkleNode{nodes[j]}, notBalancedNodes...)
+				nodes = append(nodes, nodes[j])
+				level = append(level, nodes[j])
 			} else {
 				node := NewMerkleNode(&nodes[j], &nodes[j+1], hashFunc)
+				nodes[j].Parent = node
+				nodes[j+1].Parent = node
+				node.Right = &nodes[j]
+				node.Left = &nodes[j+1]
 				level = append(level, *node)
 			}
 		}
 
 		nodes = level
-		levels = append(levels, level)
-
-		if len(nodes)%2 != 0 && len(notBalancedNodes) != 0 {
-			nodes = append(nodes, notBalancedNodes[0])
-			notBalancedNodes = notBalancedNodes[1:]
+		if len(level)%2 == 0 || len(level) == 1 {
+			levels = append(levels, level)
+		} else {
+			levels = append(levels, level[:len(level)-1])
 		}
 	}
 
@@ -167,68 +170,48 @@ func PrepareSegments(list []InputSegment) []InputSegment {
 	return listWithEmptyStruct
 }
 
-//func (tree *MerkleTree) GetProof(segment Segment) (*MerkleProof, error){
-//	segmentHash := crypto.Keccak256(append(UintToBytesArray(segment.SegmentLength), segment.Data...))
-//	exist := false
-//	leafs := tree.Levels[0]
-//	for _, l := range leafs {
-//		if bytes.Equal(l.Segment.Data, segmentHash) && l.Segment.SegmentLength == segment.SegmentLength {
-//			exist = true
-//			break
-//		}
-//	}
-//
-//	if exist == true {
-//		return &MerkleProof{
-//			 tree.Levels,
-//			 tree.RootNode.Segment.Data,
-//			 tree.RootNode.Segment.SegmentLength,
-//			 segment,
-//		}, nil
-//	} else {
-//		return nil, errors.New("Segment does not belong to the Merkle Tree")
-//	}
-//}
-//
-//func Verify(proof *MerkleProof, rootHash []byte) bool {
-//	tree := proof.Tree
-//	merkleRoot := proof.RootHash
-//	leafs := tree[0]
-//	var nodes []Segment
-//	for _, l := range leafs {
-//		nodes = append(nodes, Segment{l.Segment.SegmentLength, l.Segment.Data})
-//	}
-//
-//	for len(nodes) > 1 {
-//		var level []Segment
-//
-//		if len(nodes)%2 != 0 {
-//			nodes = append(nodes, Segment{zeroSegment, zeroHash})
-//		}
-//
-//		for i := 0; i < len(nodes); i+=2 {
-//			dataLeft := nodes[i].Data
-//			dataRight := nodes[i+1].Data
-//			segmentLengthLeft := nodes[i].SegmentLength
-//			segmentLengthRight := nodes[i+1].SegmentLength
-//			currentSegmentLength := segmentLengthLeft + segmentLengthRight
-//
-//			leftSegment := append(UintToBytesArray(segmentLengthLeft), dataLeft...)
-//			rightSegment := append(UintToBytesArray(segmentLengthRight), dataRight...)
-//
-//			node := crypto.Keccak256(append(leftSegment, rightSegment...))
-//			level = append(level, Segment{currentSegmentLength, node})
-//		}
-//
-//		nodes = level
-//	}
-//
-//	if bytes.Equal(nodes[0].Data, merkleRoot) && bytes.Equal(rootHash, merkleRoot) && nodes[0].SegmentLength == proof.RootLength {
-//		return true
-//	} else {
-//		return false
-//	}
-//}
+func (tree *MerkleTree) GetProof(index int) []ProofStep {
+	var proof []ProofStep
+	curr := tree.Levels[0][index]
+
+	for curr.Parent != nil {
+		var node *MerkleNode
+		if curr.Right != nil {
+			node = curr.Right
+		} else {
+			node = curr.Left
+		}
+		proof = append(proof, ProofStep{
+			Node: node,
+			Right: curr.Right,
+		})
+		curr = *curr.Parent
+	}
+
+	return proof
+}
+
+func Verify(proof []ProofStep, rootHash *Segment, leaf *InputSegment, hashFunc func(data ...[]byte) []byte) bool {
+	curr := MakeLeaf(leaf, hashFunc).Segment
+
+	for _, step := range proof {
+		if step.Right != nil {
+			left := append(UintToBytesArray(curr.SegmentLength), curr.Hash...)
+			right := append(UintToBytesArray(step.Node.Segment.SegmentLength), step.Node.Segment.Hash...)
+			curr = &Segment{curr.SegmentLength + step.Node.Segment.SegmentLength, hashFunc(append(left, right...))}
+		} else {
+			left := append(UintToBytesArray(step.Node.Segment.SegmentLength),step.Node.Segment.Hash...)
+			right := append(UintToBytesArray(curr.SegmentLength), curr.Hash...)
+			curr = &Segment{curr.SegmentLength + step.Node.Segment.SegmentLength, hashFunc(append(left, right...))}
+		}
+	}
+
+	if curr.SegmentLength == rootHash.SegmentLength && bytes.Equal(curr.Hash, rootHash.Hash) {
+		return true
+	} else {
+		return false
+	}
+}
 
 func UintToBytesArray(value uint32) []byte {
 	b := make([]byte, 8)

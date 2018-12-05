@@ -14,7 +14,6 @@ var zeroHash = crypto.Keccak256([]byte{})
 func main() {
 	fmt.Print(test_leaf_to_node1())
 	fmt.Print(test_leaf_to_node2())
-	fmt.Print(test_New_Merkle_Node_with_left_and_right_nodes())
 	fmt.Print(test_3_leafs())
 	fmt.Print(test_4_leafs())
 	fmt.Print(test_5_leafs())
@@ -23,6 +22,7 @@ func main() {
 	fmt.Print(test_15_leafs())
 	fmt.Print(TestSortSegments())
 	fmt.Print(test_tree_with_sort())
+	fmt.Print(test_verify_proof())
 	//fmt.Print(test_get_proof())
 	//fmt.Print(test_verify_proof())
 }
@@ -105,31 +105,6 @@ func test_leaf_to_node2() string {
 		return "test_leaf_to_node2: true\n"
 	} else {
 		return "test_leaf_to_node2: false\n"
-	}
-}
-
-func test_New_Merkle_Node_with_left_and_right_nodes() string {
-	d1 := []byte("Лист1")
-	d2 := []byte("Лист2")
-
-	someSegmentLenght1 := uint32(1)
-	someSegmentLenght2 := uint32(1)
-
-	node1 := crypto.Keccak256(append(merkleTree.UintToBytesArray(someSegmentLenght1), d1...))
-	node2 := crypto.Keccak256(append(merkleTree.UintToBytesArray(someSegmentLenght2), d2...))
-
-	node12 := crypto.Keccak256(append(append(merkleTree.UintToBytesArray(someSegmentLenght1), node1...), append(merkleTree.UintToBytesArray(someSegmentLenght2), node2...)...))
-
-	leftNode := merkleTree.MerkleNode{nil, nil, &merkleTree.Segment{someSegmentLenght1, node1}}
-	rightNode := merkleTree.MerkleNode{nil, nil, &merkleTree.Segment{someSegmentLenght2, node2}}
-
-	newNode := merkleTree.MerkleNode{&leftNode, &rightNode, &merkleTree.Segment{2, node12}}
-
-	node := merkleTree.NewMerkleNode(&leftNode, &rightNode, crypto.Keccak256)
-	if reflect.DeepEqual(node, &newNode) {
-		return "test_New_Merkle_Node_with_left_and_right_nodes: true\n"
-	} else {
-		return "test_New_Merkle_Node_with_left_and_right_nodes: false\n"
 	}
 }
 
@@ -722,83 +697,38 @@ func test_tree_with_sort() string {
 	}
 }
 
-//func test_get_proof() string {
-//	d1 := []byte("Привет")
-//	d2 := []byte("Это")
-//	d3 := []byte("Тест")
-//	d4 := []byte("По")
-//	d5 := []byte("Получению")
-//	d6 := []byte("Доказательства")
-//
-//	segmentLength1 := uint32(1)
-//	segmentLength2 := uint32(1)
-//	segmentLength3 := uint32(1)
-//	segmentLength4 := uint32(1)
-//	segmentLength5 := uint32(1)
-//	segmentLength6 := uint32(1)
-//
-//	tree := merkleTree.NewMerkleTree(
-//		[]merkleTree.Segment{
-//			merkleTree.Segment{segmentLength1, d1},
-//			merkleTree.Segment{segmentLength2, d2},
-//			merkleTree.Segment{segmentLength3, d3},
-//			merkleTree.Segment{segmentLength4, d4},
-//			merkleTree.Segment{segmentLength5, d5},
-//			merkleTree.Segment{segmentLength6, d6},
-//		},
-//		crypto.Keccak256,
-//		)
-//
-//	trueProof := merkleTree.MerkleProof{
-//		tree.Levels,
-//		tree.RootNode.Segment.Data,
-//		tree.RootNode.Segment.SegmentLength,
-//		merkleTree.Segment{segmentLength4, d4},
-//	}
-//
-//	proof, _ := tree.GetProof(merkleTree.Segment{segmentLength4, d4})
-//
-//	if reflect.DeepEqual(&trueProof, proof) {
-//		return "test_get_proof: true\n"
-//	} else {
-//		return "test_get_proof: false\n"
-//	}
-//}
-//
-//func test_verify_proof() string {
-//	d1 := []byte("Привет")
-//	d2 := []byte("Это")
-//	d3 := []byte("Тест")
-//	d4 := []byte("По")
-//	d5 := []byte("Получению")
-//	d6 := append([]byte("Доказательства"), []byte("Пруфа")...)
-//
-//	segmentLength1 := uint32(1)
-//	segmentLength2 := uint32(1)
-//	segmentLength3 := uint32(1)
-//	segmentLength4 := uint32(1)
-//	segmentLength5 := uint32(1)
-//	segmentLength6 := uint32(2)
-//
-//	tree := merkleTree.NewMerkleTree(
-//		[]merkleTree.Segment{
-//			merkleTree.Segment{segmentLength1, d1},
-//			merkleTree.Segment{segmentLength2, d2},
-//			merkleTree.Segment{segmentLength3, d3},
-//			merkleTree.Segment{segmentLength4, d4},
-//			merkleTree.Segment{segmentLength5, d5},
-//			merkleTree.Segment{segmentLength6, d6},
-//		},
-//		crypto.Keccak256,
-//	)
-//
-//	proof, _ := tree.GetProof(merkleTree.Segment{segmentLength4, d4})
-//
-//	verifyProof := merkleTree.Verify(proof, tree.RootNode.Segment.Data)
-//
-//	if verifyProof == true {
-//		return "test_verify_proof: true\n"
-//	} else {
-//		return "test_verify_proof: false\n"
-//	}
-//}
+func test_verify_proof() string {
+	d1 := []byte("Привет")
+	d2 := []byte("Это")
+	//d3 := []byte("Verify")
+	//d4 := []byte("Тест")
+	//d5 := []byte("Let's go")
+
+	segmentStart1 := uint32(123)
+	segmentEnd1 := uint32(244)
+	segmentStart2 := uint32(244)
+	segmentEnd2 := uint32(444)
+	//segmentStart3 := uint32(444)
+	//segmentEnd3 := uint32(555)
+	//segmentStart4 := uint32(1023)
+	//segmentEnd4 := uint32(1111)
+	//segmentStart5 := uint32(1200)
+	//segmentEnd5 := uint32(3000)
+
+	segments := merkleTree.PrepareSegments([]merkleTree.InputSegment{
+		{segmentStart1, segmentEnd1, d1},
+		{segmentStart2, segmentEnd2, d2},
+		//{segmentStart3, segmentEnd3, d3},
+		//{segmentStart4, segmentEnd4, d4},
+		//{segmentStart5, segmentEnd5, d5},
+	})
+
+	tree := merkleTree.NewMerkleTree(segments, crypto.Keccak256)
+	proof := tree.GetProof(1)
+
+	if merkleTree.Verify(proof, tree.RootNode.Segment, &merkleTree.InputSegment{segmentStart1, segmentEnd1, d1}, crypto.Keccak256) {
+		return "test_verify_proof: true\n"
+	} else {
+		return "test_verify_proof: false\n"
+	}
+}
